@@ -300,7 +300,7 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 	fprintf(spFile, "//         The largest integer refers only to the grammar's data. Other Parser integer's may,\n");
 	fprintf(spFile, "//         and likely will, have larger requirements. Parser may fail unpredictably.\n");
 	fprintf(spFile, "\n");
-	fprintf(spFile, "static unsigned long int ulData[%lu] = {\n", (unsigned long int)uiVecSize(vpVecData));
+	fprintf(spFile, "static signed long int ulData[%lu] = {\n", (unsigned long int)uiVecSize(vpVecData));
 	vWriteGrammarData(spFile, vpVecData);
 	fprintf(spFile, "\n");
 	fprintf(spFile, "};\n");
@@ -735,7 +735,7 @@ void vGenerateCSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, ch
 	fprintf(spFile, "//         The largest integer refers only to the grammar's data. Other Parser integer's may,\n");
 	fprintf(spFile, "//         and likely will, have larger requirements. Parser may fail unpredictably.\n");
 	fprintf(spFile, "\n");
-	fprintf(spFile, "static unsigned long int ulData[%lu] = {\n", (unsigned long int)uiVecSize(vpVecData));
+	fprintf(spFile, "static signed long int ulData[%lu] = {\n", (unsigned long int)uiVecSize(vpVecData));
 	vWriteGrammarData(spFile, vpVecData);
 	fprintf(spFile, "\n");
 	fprintf(spFile, "};\n");
