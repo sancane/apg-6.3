@@ -321,19 +321,16 @@ void vParserAstInitCallbacks(void* vpCtx, APG_CALLBACK* pfnRuleCallbacks, APG_CA
 	vAstDtor(spCtx);
 	vAstCtor(spCtx);
 	spAstCtx = (APG_AST_CTX*)spCtx->vpAstCtx;
-	APG_CALLBACK pfnTemp;
 	if(pfnRuleCallbacks){
 		for(i = 0; i < spCtx->uiRuleCount; i++){
 			if(pfnRuleCallbacks[i]){spAstCtx->pfnCallbacks[i] = pfnRuleCallbacks[i];}
 			else{spAstCtx->pfnCallbacks[i] = NULL;}
-			pfnTemp = spAstCtx->pfnCallbacks[i];
 		}
 	}
 	if(spCtx->uiUdtCount && pfnUdtCallbacks){
 		for(i = 0; i < spCtx->uiUdtCount; i++){
 			if(pfnUdtCallbacks[i]){spAstCtx->pfnCallbacks[i + spCtx->uiRuleCount] = pfnUdtCallbacks[i];}
 			else{spAstCtx->pfnCallbacks[i + spCtx->uiRuleCount] = NULL;}
-			pfnTemp = spAstCtx->pfnCallbacks[i + spCtx->uiRuleCount];
 		}
 	}
 }

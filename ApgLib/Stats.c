@@ -130,7 +130,7 @@ static void vStatsGetNameAddresses(APG_PARSER_CTX* spParserCtx, APG_PARSER_STATS
 
 static apg_uint uiStatsGetNames(APG_PARSER_CTX* spParserCtx, APG_PARSER_STATS* spPublicStats){
 	apg_uint uiSize = 0;
-	apg_uint i, j, uiLen;
+	apg_uint i,uiLen;
 	char* cpNameBuffer = spPublicStats ? spPublicStats->cpNames : NULL;
 	for(i = 0; i < spParserCtx->uiRuleCount; i++){
 		uiLen = strlen(spParserCtx->spRules[i].cpRuleName) + 1;
@@ -145,7 +145,6 @@ static apg_uint uiStatsGetNames(APG_PARSER_CTX* spParserCtx, APG_PARSER_STATS* s
 		uiSize += uiLen;
 		if(cpNameBuffer){
 			strcpy(cpNameBuffer, spParserCtx->spUdts[i].cpUdtName);
-			j = i + spParserCtx->uiRuleCount;
 			cpNameBuffer += uiLen;
 		}
 	}

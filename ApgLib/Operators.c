@@ -31,21 +31,15 @@
 
 //NOTE: returns phrase length on success, APG_UNDEFINED on failure
 apg_uint uiALT(struct parserctx* spCtx, struct opcode* spOp, apg_uint uiOffset){
-	apg_uint uiHaveAst;
-	APG_AST_CTX* spAstCtx = (APG_AST_CTX*)spCtx->vpAstCtx;
 	apg_uint uiPhraseLength = APG_UNDEFINED;
-	apg_uint uiAstRecord = APG_UNDEFINED;
 	APG_OPCODE* spChildOp;
 	apg_uint* uipChildList = spOp->sUnion.sAlt.uipChildList;
 	apg_uint* uipEnd = uipChildList + spOp->sUnion.sAlt.uiChildCount;
 	APG_TRACE(spCtx, spOp, TRACE_ACTION_DOWN, P_ALT, uiOffset, 0);
-	uiHaveAst = spAstCtx && !spAstCtx->uiIgnoreRecords;
 	for(; uipChildList < uipEnd; uipChildList++){
-		if(uiHaveAst){uiAstRecord = spAstCtx->uiRecordCount;}
 		spChildOp = spCtx->spOpcodes + *uipChildList;
 		uiPhraseLength = spChildOp->pfnOp(spCtx, spChildOp, uiOffset);
 		if(uiPhraseLength != APG_UNDEFINED){break;}
-		if(uiHaveAst){uiAstRecord = spAstCtx->uiRecordCount;}
 	}
 	APG_TRACE(spCtx, spOp, TRACE_ACTION_UP, P_ALT, uiOffset, uiPhraseLength);
 	APG_STATS(spCtx, STATS_ACTION_COLLECT, uiPhraseLength, P_ALT, 0);

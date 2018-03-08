@@ -199,13 +199,11 @@ apg_uint uiACharToString(char* cpChars, apg_uint uiCLen, const apg_achar* acpACh
 	apg_uint i = 0;
 	apg_achar acChar;
 	char* cpNextChar;
-	const apg_achar* cpBufferEnd;
 	apg_uint uiCharLen, uiStrLen;
 	apg_uint uiCLenMax;
 	apg_uint uiSize = sizeof(apg_achar);
 	cpNextChar = cpChars;
 	if(acpAChars && uiALen && cpChars && uiCLen){
-		cpBufferEnd = acpAChars + uiALen;
 		uiCLenMax = uiCLen - 1;
 		uiStrLen = 0;
 		for(i = 0; i < uiALen && uiStrLen < uiCLenMax; i++){

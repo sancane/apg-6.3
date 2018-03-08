@@ -135,15 +135,8 @@ void	vTraceAdmin(APG_PARSER_CTX* spParserCtx, apg_uint uiAction, apg_uint uiId, 
 
 void vTrace(APG_PARSER_CTX* spParserCtx, APG_OPCODE* spOp, apg_uint uiAction, apg_uint uiId, apg_uint uiOffset, apg_uint uiPhraseLen){
 	APG_TRACE_CTX* spCtx = (APG_TRACE_CTX*)spParserCtx->vpTraceCtx;
-	apg_uint uiState, uiStrLen;
-	const apg_achar* acpPhrase;
 
 	if(spParserCtx->vpTraceCtx){
-		if(uiPhraseLen == APG_UNDEFINED){uiState = NOMATCH;}
-		else if(uiPhraseLen == 0){uiState = EMPTY;}
-		else{uiState = MATCH;}
-		uiStrLen = (uiOffset < spParserCtx->uiInputStringLen) ? spParserCtx->uiInputStringLen - uiOffset: 0;
-		acpPhrase = spParserCtx->acpInputString + uiOffset;
 		switch(uiAction){
 		case TRACE_ACTION_BEGIN:
 			vTraceBegin(spCtx);
@@ -364,7 +357,7 @@ static void vTraceDown(APG_TRACE_CTX* spCtx, APG_OPCODE* spOp, apg_uint uiId, ap
 	apg_uint uiIsTruncated = APG_FALSE;
 	char caIndentBuf[APG_DISPLAY_MAX_LINE];
 	char caScratchBuf[2*APG_DISPLAY_MAX_LINE];
-	apg_uint uiAChars, uiPrintChars;
+	apg_uint uiAChars;
 	void* vpTest;
 	const apg_achar* acpPhrase;
 	apg_uint uiPhraseLen;
@@ -416,10 +409,8 @@ static void vTraceDown(APG_TRACE_CTX* spCtx, APG_OPCODE* spOp, apg_uint uiId, ap
 				TASSERT(APG_FALSE);
 				break;
 			}
-			uiPrintChars = uiStrBufCat(vpPrtBuf, ": :");
 			if(uiStrBufIsTruncated(vpPrtBuf)){uiIsTruncated = APG_TRUE;break;}
 			uiAChars = uiACharToString(&caScratchBuf[0], sizeof(caScratchBuf), acpPhrase, uiPhraseLen);
-			uiPrintChars = uiStrBufCat(vpPrtBuf, &caScratchBuf[0]);
 			if(uiAChars < uiPhraseLen){uiIsTruncated = APG_TRUE;break;}
 			if(uiStrBufIsTruncated(vpPrtBuf)){uiIsTruncated = APG_TRUE;break;}
 	spCtx->uiTreeDepth++;
@@ -439,7 +430,7 @@ static void vTraceUp(APG_TRACE_CTX* spCtx, APG_OPCODE* spOp, apg_uint uiId, apg_
 	apg_uint uiIsTruncated = APG_FALSE;
 	char caIndentBuf[APG_DISPLAY_MAX_LINE];
 	char caScratchBuf[2*APG_DISPLAY_MAX_LINE];
-	apg_uint uiAChars, uiPrintChars;
+	apg_uint uiAChars;
 	int uiState;
 	const apg_achar* acpPhrase;
 	apg_uint* uipOtherRecord;
@@ -496,13 +487,8 @@ static void vTraceUp(APG_TRACE_CTX* spCtx, APG_OPCODE* spOp, apg_uint uiId, apg_
 				break;
 			}
 			if(uiStrBufIsTruncated(vpPrtBuf)){uiIsTruncated = APG_TRUE;break;}
-			if(uiPhraseLen == APG_UNDEFINED){
-				uiPrintChars = uiStrBufCat(vpPrtBuf, ": :");
-			} else{
-				sprintf(&caScratchBuf[0], ":%lu:", (unsigned long int)uiPhraseLen);
-				uiPrintChars = uiStrBufCat(vpPrtBuf, &caScratchBuf[0]);
+			if(uiPhraseLen != APG_UNDEFINED){sprintf(&caScratchBuf[0], ":%lu:", (unsigned long int)uiPhraseLen);
 				uiAChars = uiACharToString(&caScratchBuf[0], sizeof(caScratchBuf), acpPhrase, uiPhraseLen);
-				uiPrintChars = uiStrBufCat(vpPrtBuf, &caScratchBuf[0]);
 				if(uiAChars < uiPhraseLen){uiIsTruncated = APG_TRUE;break;}
 				if(uiStrBufIsTruncated(vpPrtBuf)){uiIsTruncated = APG_TRUE;break;}
 			}

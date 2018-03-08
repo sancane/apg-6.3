@@ -183,7 +183,6 @@ and one for the POST_AST or upward direction visit.
 void vDisplayAstRecords(FILE* spOut, void*	vpParserCtx){
 	APG_PARSER_CTX* spParserCtx = (APG_PARSER_CTX*)vpParserCtx;
 	if(spParserCtx->vpAstCtx){
-		apg_uint uiCharLen;
 		apg_uint uiBufLen = 128;
 		char cpBuffer[uiBufLen];
 
@@ -225,7 +224,6 @@ void vDisplayAstRecords(FILE* spOut, void*	vpParserCtx){
 					sprintf(&caScratchBuf[0], "%s%s:%lu:%lu:", cpBuffer, spUdt->cpUdtName,
 							(printf_uint)spRecord->uiPhraseOffset, (printf_uint)spRecord->uiPhraseLength);
 					uiStrBufCat(vpPrtBuf, &caScratchBuf[0]);
-					uiCharLen = uiACharToString(cpBuffer, uiBufLen, acpPhrase, uiPhraseLen);
 					uiStrBufCat(vpPrtBuf, cpBuffer);
 				} else{
 					APG_RULE* spRule= spParserCtx->spRules + spRecord->uiId;
