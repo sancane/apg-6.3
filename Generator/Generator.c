@@ -38,6 +38,7 @@ static int iCompNames(const void* vpLhs, const void* vpRhs);
 static void vPrintOriginalGrammar(FILE* spFile, char* cpGrammar);
 static void vToUpper(char* cpString, char* cpToUpper, G_UINT uiLen);
 static G_UINT uiMinIntSize(G_UINT uiSize);
+static void vNoHyphen(char* cpString, char* cpNoHyphen, G_UINT uiLen);
 
 void vGenerateCppHeader(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, char* cpGrammar, char* cpFileName, apg_uint uiFileNameLen){
 	char caHeaderDefine[1024];
@@ -183,24 +184,28 @@ void vGenerateCppHeader(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 	fprintf(spOut, "	// SYNTAX CALL BACK FUNCTIONS\n");
 	for(i = 0; i < uiRuleCount; i++){
 		cpName = spRuleSort[i].cpName;
-		fprintf(spFile, "   static apg_uint uiSyn_%s(APG_CBDATA* spData);\n", cpName);
+		vNoHyphen(cpName, caBuffer2, sizeof(caBuffer2));
+		fprintf(spFile, "   static apg_uint uiSyn_%s(APG_CBDATA* spData);\n", caBuffer2);
 	}
 	if(uiUdtCount){
 		for(i = 0; i < uiUdtCount; i++){
 			cpName = spUdtSort[i].cpName;
-			fprintf(spFile, "   static apg_uint uiSyn_%s(APG_CBDATA* spData);\n", cpName);
+			vNoHyphen(cpName, caBuffer2, sizeof(caBuffer2));
+			fprintf(spFile, "   static apg_uint uiSyn_%s(APG_CBDATA* spData);\n", caBuffer2);
 		}
 	}
 	fprintf(spFile, "\n");
 	fprintf(spFile, "	// AST CALL BACK FUNCTIONS\n");
 	for(i = 0; i < uiRuleCount; i++){
 		cpName = spRuleSort[i].cpName;
-		fprintf(spFile, "   static apg_uint uiAst_%s(APG_CBDATA* spData);\n", cpName);
+		vNoHyphen(cpName, caBuffer2, sizeof(caBuffer2));
+		fprintf(spFile, "   static apg_uint uiAst_%s(APG_CBDATA* spData);\n", caBuffer2);
 	}
 	if(uiUdtCount){
 		for(i = 0; i < uiUdtCount; i++){
 			cpName = spUdtSort[i].cpName;
-			fprintf(spFile, "   static apg_uint uiAst_%s(APG_CBDATA* spData);\n", cpName);
+			vNoHyphen(cpName, caBuffer2, sizeof(caBuffer2));
+			fprintf(spFile, "   static apg_uint uiAst_%s(APG_CBDATA* spData);\n", caBuffer2);
 		}
 	}
 	fprintf(spFile, "};");
@@ -220,6 +225,7 @@ void vGenerateCppHeader(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, char* cpFileName, apg_uint uiFileNameLen){
 	char caBuffer[1024];
 	char caBuffer2[1024];
+	char caBuffer3[1024];
 	FILE* spFile;
 	FILE* spOut;
 	G_UINT i;
@@ -390,12 +396,13 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 	for(i = 0; i < uiRuleCount; i++){
 		cpName = spRuleSort[i].cpName;
 		vToUpper(cpName, caBuffer2, sizeof(caBuffer2));
+		vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
 		if(spRuleSort[i].uiIndex == 0){
             fprintf(spFile, "        sppRuleCallbacks[%s::RULEID_%s] = %s::uiSyn_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		} else{
             fprintf(spFile, "//      sppRuleCallbacks[%s::RULEID_%s] = %s::uiSyn_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		}
 	}
 	fprintf(spOut, "    }\n");
@@ -404,12 +411,13 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 	for(i = 0; i < uiUdtCount; i++){
 		cpName = spUdtSort[i].cpName;
 		vToUpper(cpName, caBuffer2, sizeof(caBuffer2));
+		vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
 		if(spUdtSort[i].uiIndex == 0){
             fprintf(spFile, "        sppUdtCallbacks[%s::UDTID_%s] = %s::uiSyn_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		} else{
             fprintf(spFile, "//      sppUdtCallbacks[%s::UDTID_%s] = %s::uiSyn_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		}
 	}
 	fprintf(spOut, "    }\n");
@@ -427,12 +435,13 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 	for(i = 0; i < uiRuleCount; i++){
 		cpName = spRuleSort[i].cpName;
 		vToUpper(cpName, caBuffer2, sizeof(caBuffer2));
+		vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
 		if(spRuleSort[i].uiIndex == 0){
             fprintf(spFile, "        sppRuleCallbacks[%s::RULEID_%s] = %s::uiAst_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		} else{
             fprintf(spFile, "//      sppRuleCallbacks[%s::RULEID_%s] = %s::uiAst_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		}
 	}
 	fprintf(spOut, "    }\n");
@@ -441,12 +450,13 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 	for(i = 0; i < uiUdtCount; i++){
 		cpName = spUdtSort[i].cpName;
 		vToUpper(cpName, caBuffer2, sizeof(caBuffer2));
+		vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
 		if(spUdtSort[i].uiIndex == 0){
             fprintf(spFile, "        sppUdtCallbacks[%s::UDTID_%s] = %s::uiAst_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		} else{
             fprintf(spFile, "//      sppUdtCallbacks[%s::UDTID_%s] = %s::uiAst_%s;\n",
-                    cpProjectName, caBuffer2, cpProjectName, cpName);
+                    cpProjectName, caBuffer2, cpProjectName, caBuffer3);
 		}
 	}
 	fprintf(spOut, "    }\n");
@@ -493,8 +503,9 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 			break;
 		}
 	}
+	vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
 	fprintf(spOut, "// template for Rule syntax callback functions\n");
-	fprintf(spOut, "apg_uint %s::uiSyn_%s(APG_CBDATA* spData){\n", cpProjectName, cpName);
+	fprintf(spOut, "apg_uint %s::uiSyn_%s(APG_CBDATA* spData){\n", cpProjectName, caBuffer3);
 	fprintf(spOut, "    apg_uint uiRet = APG_FALSE;\n");
     fprintf(spOut, "//  uncomment to access the phrase to be parsed by this function\n");
     fprintf(spOut, "//  const apg_achar* acpPhrase = spData->acpSrc + spData->uiPhraseOffset;\n");
@@ -520,10 +531,11 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 				break;
 			}
 		}
+        vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
         fprintf(spOut, "\n");
         fprintf(spOut, "// template for UDT syntax callback functions\n");
         fprintf(spOut, "// Copy and override for each required UDT syntax callback functions\n");
-		fprintf(spOut, "apg_uint %s::uiSyn_%s(APG_CBDATA* spData){\n", cpProjectName, cpName);
+		fprintf(spOut, "apg_uint %s::uiSyn_%s(APG_CBDATA* spData){\n", cpProjectName, caBuffer3);
         fprintf(spOut, "//  uncomment to access the phrase to be parsed by this function\n");
 		fprintf(spOut, "//  const apg_achar* acpPhrase = spData->acpSrc + spData->uiPhraseOffset;\n");
 		fprintf(spOut, "//  apg_uint uiMaxPhraseLength = spData->uiSrcLen - spData->uiPhraseOffset;\n");
@@ -541,8 +553,9 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 			break;
 		}
 	}
+	vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
 	fprintf(spOut, "// template for Rule AST callback functions\n");
-	fprintf(spOut, "apg_uint %s::uiAst_%s(APG_CBDATA* spData){\n", cpProjectName, cpName);
+	fprintf(spOut, "apg_uint %s::uiAst_%s(APG_CBDATA* spData){\n", cpProjectName, caBuffer3);
     fprintf(spOut, "//  uncomment to access the phrase to be parsed by this function\n");
     fprintf(spOut, "//  const apg_achar* acpPhrase = spData->acpSrc + spData->uiPhraseOffset;\n");
     fprintf(spOut, "//  apg_uint uiMaxPhraseLength = spData->uiSrcLen - spData->uiPhraseOffset;\n");
@@ -563,8 +576,9 @@ void vGenerateCppSource(CALLBACK_CTX* spCtx, char* cpPath, char* cpProjectName, 
 				break;
 			}
 		}
+        vNoHyphen(cpName, caBuffer3, sizeof(caBuffer3));
         fprintf(spOut, "// template for UDT AST callback functions\n");
-		fprintf(spOut, "apg_uint %s::uiAst_%s(APG_CBDATA* spData){\n", cpProjectName, cpName);
+		fprintf(spOut, "apg_uint %s::uiAst_%s(APG_CBDATA* spData){\n", cpProjectName, caBuffer3);
         fprintf(spOut, "//  uncomment to access the phrase to be parsed by this function\n");
 		fprintf(spOut, "//  const apg_achar* acpPhrase = spData->acpSrc + spData->uiPhraseOffset;\n");
 		fprintf(spOut, "//  apg_uint uiMaxPhraseLength = spData->uiSrcLen - spData->uiPhraseOffset;\n");
@@ -852,6 +866,20 @@ static void vToUpper(char* cpString, char* cpToUpper, G_UINT uiLen){
 		else{*cpToUpper = toupper(*cpString);}
 	}
 	*cpToUpper = 0;
+}
+
+static void vNoHyphen(char* cpString, char* cpNoHyphen, G_UINT uiLen){
+	GASSERT(cpString);
+	GASSERT(cpNoHyphen);
+	GASSERT(uiLen);
+	uiLen++;
+	uiLen = min(uiLen, (G_UINT)(strlen(cpString)+1));
+	char* cpEnd = cpString + uiLen - 1;
+	for(; cpString < cpEnd; cpString++, cpNoHyphen++){
+		if(*cpString == '-'){*cpNoHyphen = '_';}
+		else{*cpNoHyphen = *cpString;}
+	}
+	*cpNoHyphen = 0;
 }
 
 static G_UINT uiMinIntSize(G_UINT uiSize){
